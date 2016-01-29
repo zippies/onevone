@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+
+<body style="backgroup-color:black;">
+{% if result %}
+	<div class="container">
+	
+		<div style="margin-top:20px;margin-bottom:20px">
+			用例数量：{{ result.casecount }} 
+			循环次数：{{ result.loop }} 
+			当前Build：<label id="buildid" style="color:red">17</label>
+		</div>
+		<div class="row">
+			<div style="float:left;display:inline;margin-left:30px">
+				<button type="button" class="btn btn-default" onclick="forward()">上一个</button>
+			</div>
+			<div style="float:right;display:inline;margin-right:30px">
+				<button type="button" class="btn btn-default" onclick="backward()">下一个</button>
+			</div>
+		</div>
+		<div style="margin-top:20px">
+			<label>Failures:</label>
+			<div>
+				<table class="table table-striped">
+					<tr>
+						<th class="warning">casename</th>
+						<th class="warning">desc</th>
+						<th class="warning" width="200px">time</th>
+						<th class="warning">errorMsg</th>
+						<th class="warning" width="100px">view</th>
+					</tr>
+					{% for case in result.failed %}
+						<tr>
+							<td class="warning">{{ case.name }}</td>
+							<td class="warning">{{ case.desc }}</td>
+							<td class="warning">{{ case.endtime }}</td>
+							<td class="warning">{{ case.errorMsg }}</td>
+							<td class="warning"><a href="http://{{ server }}:{{ serverport }}/view/{{ case.logpath.split("logs/")[1] }}" target="_blank">查看日志</a></td>
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+		
+		<div style="margin-top:20px">
+			<label>Successes:</label>
+			<div>
+				<table class="table table-striped">
+					<tr>
+						<th class="success">casename</th>
+						<th class="success">desc</th>
+						<th class="success">time</th>
+						<th class="success">view</th>
+						
+					</tr>
+					{% for case in result.passed %}
+						<tr>
+							<td class="success">{{ case.name }}</td>
+							<td class="success">{{ case.desc }}</td>
+							<td class="success">{{ case.endtime }}111</td>
+							<td class="success"><a href="http://10.2.1.68:{{ serverport }}/view/{{ case.logpath.split("logs/")[1] }}" target="_blank">查看日志</a></td>
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+		
+		<div style="height:300px">
+		
+		</div>
+	</div>
+	
+<script language="javascript">
+	$(function(){
+		url = window.location.href;
+		strs = url.split("/");
+		no = parseInt(strs[5]);
+		$("#buildid").html(no);
+	});
+
+	function backward() {
+		url = window.location.href;
+		strs = url.split("/");
+		no = parseInt(strs[5])+1;
+
+		var re = /\/[0-9]+\//g
+		url_back = url.replace(re,"/"+no+"/");
+		console.log(url_back);
+		window.location.href = url_back; 
+	}
+
+	function forward() {
+		url = window.location.href;
+		strs = url.split("/");
+		no = parseInt(strs[5])-1;
+		var re = /\/[0-9]+\//g
+		url_back = url.replace(re,"/"+no+"/");
+		console.log(url_back);
+		window.location.href = url_back; 
+	}
+</script>
+{% endif %}
+</body>
+</html>
+
+
+
+
+
+
+
+
